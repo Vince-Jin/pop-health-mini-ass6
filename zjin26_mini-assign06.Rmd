@@ -1,0 +1,71 @@
+---
+title: "zjin26_mini-assign06"
+author: "Vincent Jin"
+date: "2023-04-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# ============================================================ 
+# 	Mini-assignment # 6
+# ============================================================ 
+
+``` {r}
+library(tidyverse)
+library(data.table)
+```
+
+# (1) import the data_pat.csv file as a data.table
+
+``` {r}
+file_csv = 'C:/Population Health/pop-health-mini-ass6/data_pat.csv'
+dt <- as.data.table(read_csv(file = file_csv))
+```
+
+# (2) show the histogram of "cost_current_total"; do you see a pattern?
+
+``` {r}
+hist(dt$cost_current_total)
+```
+
+***Answer***
+
+The histogram suggested a heavily right skewed 
+
+# (3) add a column to store the log of "cost_future_total" -- call the new column as "cost_future_total_log"
+
+``` {r}
+dt[, cost_future_total_log := log(cost_future_total)]
+dt
+```
+
+# (4) show the histogram of "cost_future_total_log"; do you see a pattern?
+
+``` {r}
+hist(dt$cost_future_total_log)
+```
+
+# (5) count how many of the "cost_future_total_log" values are "-Inf", and then replace all of them with 0
+
+``` {r}
+dt[cost_future_total_log == -Inf, .(ct_Inf = .N)]
+dt[cost_future_total_log == -Inf, cost_future_total_log := 0]
+```
+
+# (6) show the histogram of "cost_future_total_log" once more; do you see a new pattern?
+
+``` {r}
+hist(dt$cost_future_total_log)
+```
+
+# (7) save the new data.table as data_pat_log.csv and also data_pat_log.rds, but use "\t" (tab) as the separator
+
+``` {r}
+file_csv = 'C:/Population Health/pop-health-mini-ass6/data_pat_log.csv'
+file_rds = 'C:/Population Health/pop-health-mini-ass6/data_pat_log.rds'
+fwrite(dt, file_csv, sep = "\t")
+saveRDS(dt, file_rds) 
+```
